@@ -18,16 +18,50 @@ class LinkStore extends EventEmitter {
           this.emit("CHANGE");
           break;
         case ActionTypes.RECEIVE_ONE_LINK:
-            console.log("We received news about the new link", action);
-            // account for the new data;
-            _links.push(action.link);
-            this.emit("CHANGE");
-            break;
+          console.log("We received news about the new link", action);
+          // account for the new data;
+          _links.push(action.link);
+          this.emit("CHANGE");
+          break;
+        case ActionTypes.LIKED_ONE_LINK:
+          console.log("We received news about the new link", action);
+          // account for the new data;
+          for (var i = 0; i < _links.length; ++i) {
+            if (_links[i]._id === action.link._id) {
+              _links[i] = action.link;
+              break;
+            }
+          }
+          this.emit("CHANGE");
+          break;
+        case ActionTypes.UNLIKED_ONE_LINK:
+          console.log("We received news about the new link", action);
+          // account for the new data;
+          for (var i = 0; i < _links.length; ++i) {
+            if (_links[i]._id === action.link._id) {
+              _links[i] = action.link;
+              break;
+            }
+          }
+          this.emit("CHANGE");
+          break;
+        case ActionTypes.DELETED_ONE_LINK:
+          console.log("We received news about deleted link", action);
+          // account for the new data;
+          for (var i = 0; i < _links.length; ++i) {
+            if (_links[i]._id === action.linkId) {
+              _links.splice(i, 1);
+              break;
+            }
+          }
+          this.emit("CHANGE");
+          break;
         default:
           // do nothing
       }
-    })
+    });
   }
+
   // Expose some data
   getAll() {
     return _links.map(link => {
@@ -42,6 +76,7 @@ class LinkStore extends EventEmitter {
   startListening(callback) {
     this.on("CHANGE", callback);
   }
+
   stopListening(callback) {
     this.removeListener("CHANGE", callback);
   }
