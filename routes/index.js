@@ -21,7 +21,9 @@ router.get('/api/links', function(req, res, next) {
     else {
       let rIp = getRemoteIp(req);
       for (var i = 0; i < links.length; i++) {
-        links[i].ilike = !!~links[i].likes.indexOf(rIp);
+        if (links[i]) {
+          links[i].ilike = !!~links[i].likes.indexOf(rIp);
+        }
       };
       res.json({links: links });
     }
@@ -58,7 +60,9 @@ router.delete('/api/links/:linkId/like', function(req, res, next) {
       res.status(500).json('operation failed');
     }
     else {
-      link.ilike = false;
+      if (link) {
+        link.ilike = false;
+      }
       res.json(link);
     }
   });
