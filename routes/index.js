@@ -2,7 +2,6 @@
 
 let express = require('express');
 let router = express.Router();
-let Address6 = require('ip-address').Address6;
 
 let Link = require('../models/link');
 
