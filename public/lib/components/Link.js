@@ -8,8 +8,7 @@ class Link extends React.Component {
   }
   toggleLike(e) {
     e.preventDefault();
-    let likes = this.props.link.likes;
-    if (likes && likes.length > 0) {
+    if (this.props.link.ilike) {
       LinkActions.unlikeBookmark(this.props.link._id);
     }
     else {
@@ -17,16 +16,22 @@ class Link extends React.Component {
     }
   }
   render() {
-    let {title, url, safe, likes} = this.props.link;
+    let {title, url, safe, likes, ilike} = this.props.link;
+    let noLikes = !likes || likes.length === 0;
 
     return (
       <div className="link">
         <a href={url}
            style={ { color: (safe ? 'green' : 'black') } }
           >{title}</a>
-        <span> {!likes || likes.length === 0 ? 'no likes' : likes.length + ' likes'}</span><span> </span>
-        <a href="#" onClick={this.toggleLike.bind(this)}>Like</a><span> </span>
-        <a href="#" onClick={this.deleteBookmark.bind(this)}>Delete</a>
+        <span className="like"
+              style={ { color: (ilike ? '#ffc0cb' : noLikes ? '#ccc' : '#000') } }
+          > &#9829; {noLikes ? 'no likes' : likes.length + ' likes'}</span>
+        <span> </span>
+        <a className="likeLink" href="#" onClick={this.toggleLike.bind(this)}>
+          {ilike ? 'Unlike' : 'Like'}</a>
+        <span> </span>
+        <a className="deleteLink" href="#" onClick={this.deleteBookmark.bind(this)}>Delete</a>
       </div>
     );
   }

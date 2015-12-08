@@ -4,11 +4,15 @@ let express = require('express');
 let router = express.Router();
 let Address6 = require('ip-address').Address6;
 
+let Link = require('../models/link');
+
 router.get('/express', function(req, res, next) {
   res.render('index', { title: 'React' });
 });
 
-let Link = require('../models/link');
+let getRemoteIp = (req) => {
+  return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+}
 
 router.get('/api/links', function(req, res, next) {
   Link.find({}, (err, links) => {
@@ -16,6 +20,10 @@ router.get('/api/links', function(req, res, next) {
       res.status(500).json('operation failed');
     }
     else {
+      let rIp = getRemoteIp(req);
+      for (var i = 0; i < links.length; i++) {
+        links[i].ilike = !!~links[i].likes.indexOf(rIp);
+      };
       res.json({links: links });
     }
   });
@@ -33,17 +41,13 @@ router.post('/api/links', function(req, res, next) {
   });
 });
 
-let getRemoteIp = (req) => {
-  return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-}
-
 router.post('/api/links/:linkId/like', function(req, res, next) {
   Link.findOneAndUpdate({_id: req.params.linkId}, { $addToSet: { likes: getRemoteIp(req)}}, {new: true}, (err, link) => {
     if (err) {
       res.status(500).json('operation failed');
     }
     else {
-      console.log('result:', link);
+      link.ilike = true;
       res.json(link);
     }
   });
@@ -55,7 +59,7 @@ router.delete('/api/links/:linkId/like', function(req, res, next) {
       res.status(500).json('operation failed');
     }
     else {
-      console.log('result:', link);
+      link.ilike = false;
       res.json(link);
     }
   });
@@ -67,7 +71,6 @@ router.delete('/api/links/:linkId', function(req, res, next) {
       res.status(500).json('operation failed');
     }
     else {
-      console.log('bookmark deleted:', data);
       res.json(data);
     }
   });

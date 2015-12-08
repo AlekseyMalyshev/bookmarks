@@ -2,8 +2,16 @@
   "name": "bookmarks",
   "version": "0.0.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AlekseyMalyshev/bookmarks/tree/homework"
+  },
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "jspm": "^0.16.15"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
@@ -14,9 +22,6 @@
     "mongoose": "^4.2.9",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0"
-  },
-  "devDependencies": {
-    "jspm": "^0.16.15"
   },
   "jspm": {
     "directories": {
